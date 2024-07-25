@@ -1,29 +1,30 @@
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
 import pickle
+from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
 
-# Load data
-data = pd.read_csv('path_to_your_dataset.csv')
+# Dummy training data
+menu_category = ['Beverages', 'Appetizers', 'Desserts', 'Main Course']
+menu_item = ['Soda', 'Tiramisu', 'Chicken Alfredo', 'Spinach Artichoke Dip']
+ingredients = ['confidential','Tomatoes', 'Basil', 'Garlic', 'Olive Oil']
 
-# Encode categorical variables
-label_encoder = LabelEncoder()
-data['MenuCategory'] = label_encoder.fit_transform(data['MenuCategory'])
-data['MenuItem'] = label_encoder.fit_transform(data['MenuItem'])
-data['Ingredients'] = label_encoder.fit_transform(data['Ingredients'])
-data['Profitability'] = label_encoder.fit_transform(data['Profitability'])
+# Create and train label encoders
+le_menu_category = LabelEncoder().fit(menu_category)
+le_menu_item = LabelEncoder().fit(menu_item)
+le_ingredients = LabelEncoder().fit(ingredients)
 
-# Define features and target
-X = data[['MenuCategory', 'MenuItem', 'Ingredients', 'Price']]
-y = data['Profitability']
+# Save label encoders
+with open('label_encoders.pkl', 'wb') as file:
+    pickle.dump({
+        'menu_category': le_menu_category,
+        'menu_item': le_menu_item,
+        'ingredients': le_ingredients
+    }, file)
 
-# Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Train Random Forest model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
+# Dummy model training
+model = RandomForestClassifier()
+# Note: Replace this with your actual model training code and data
+X_train = [[0, 0, 0, 10.0]]  # Example training data
+y_train = [1]  # Example target
 model.fit(X_train, y_train)
 
 # Save the model
